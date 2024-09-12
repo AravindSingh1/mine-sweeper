@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Boxes</title>
+
+    <style>
+        html{
+            height: 100%;
+            width: 100%;
+        }
+        body{
+            margin: 0;
+            padding: 0;
+            height: 90vh;
+            box-sizing: border-box;
+            background-color: #EDE4FF;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            /* user-select: none; */
+        }
+        section{
+            /* border: 1px solid red; */
+            border-radius: 20px;
+            width: 85vw;
+            margin:25px auto;
+            background-color: #F5F5DC;
+            height: 80vh;
+            box-shadow: 5px 5px 5px 5px #B2A4FF;
+            position: relative;
+        }
+        .main {
+            width: 150px;
+            /* border:1px solid red; */
+            margin: 100px auto;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .heading {
+            text-align: center;
+            padding-top: 15px;
+            /* border: 1px solid black; */
+        }
+
+        .box {
+            color: transparent;
+            width: 30px;
+            height: 30px;
+            background-color: gray;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            border-radius: 5px;
+            border: 1px solid black;
+            margin: 0.5px;
+        }
+
+        .score {
+            text-align: left;
+            width: 100px;
+            /* border: 1px solid black; */
+            margin: auto;
+        }
+        .gameStatus{
+            height: 120px;
+            border: 1px solid #F5F5DC;
+            border-radius: 10px;
+            margin: auto;
+            width: 250px;
+            text-align: center;
+            background-color: white;
+            position: absolute;
+            top: 70%;
+            left: 50%;
+            transform: translate(-50%);
+            scale: 0;
+            transform-origin: left center;
+            transition: .4s;
+        }
+
+        @media screen and (min-width: 766px) {
+            section{
+                width: 60vw;
+                height: 70vh;
+            }
+            body{
+                font-size: 1.7rem;
+            }
+            .main{
+                width: 220px;
+            }
+            .box{
+                width: 45px;
+                height: 45px;
+                margin: 2px;
+            }
+            .score{
+                width: 130px;
+                /* border: 1px solid red; */
+            }
+            .gameStatus{
+                width: 350px;
+                height: 175px;
+            }
+        }
+
+        @media screen and (min-width: 1022px) {
+            section{
+                width: 30vw;
+                /* border: 1px solid red; */
+                height: 70vh;
+            }
+        }
+    </style>
+
+</head>
+
+
+
+<body>
+    <section>
+        <div class="heading">
+            <h2>MineSweeper</h2>
+        </div>
+        <div class="main" id="result"></div>
+        <div class="score">
+            <h3>Score: <span id="score">0</span></h3>
+        </div>
+        <div class="gameStatus" id="gameStatDiv"><h1 id="gameStatus"></h1><h3 id="cause"></h3></div>
+    </section>
+</body>
+
+<script>
+
+    function get(id) {
+        return document.getElementById(id);
+    }
+    const GAMESTAT = get("gameStatus");
+    const CAUSE = get("cause");
+    const GAMESTATDIV = get("gameStatDiv");
+
+    function createBoxes(n) {
+        let op = "";
+        let Rand = Random();
+        console.log(Rand)
+        for (let i = 0; i < n; i++) {
+            if (i != Rand) {
+                op += `<span class='box' id='b${i}' onclick='changeColor(this)'>A</span>`;
+            }
+            else {
+                op += `<span class='box' id='b${Rand}' onclick='blast(this)'>💣</span>`;
+                
+            }
+        }
+
+        get("result").innerHTML = op;
+
+        console.log(op);
+
+    }
+
+    createBoxes(16)
+
+    function changeColor(ele) {
+        console.log(ele);
+        var score = get("score");
+        if (ele.textContent == "A") {
+            score.textContent++;
+            ele.style.color = "black";
+            ele.textContent = "🪙";
+            ele.style.backgroundColor = "orange";
+            if(score.textContent == 15){
+                GAMESTAT.textContent = "You won!";
+                GAMESTAT.style.color = "green";
+                CAUSE.textContent = "Congratulations"
+                GAMESTATDIV.style.scale = "1";
+            }
+        }
+
+    }
+
+    function Random() {
+        return Math.round(Math.random() * 15);
+    }
+
+    function blast(no) {
+        if (score.textContent < 15){
+        no.style.backgroundColor = "red";
+        no.style.color = "black";
+        GAMESTATDIV.style.scale = "1";
+        GAMESTAT.innerHTML = "Game over!";
+        GAMESTAT.style.color = "orangered";
+        CAUSE.innerHTML = "You hit the bomb!"
+        CAUSE.style.color = "orangered"
+        for (let i = 0; i < 16; i++) {
+            if (get(`b${i}`).textContent == "A") {
+                get(`b${i}`).textContent = "🪙";
+            }
+        }
+    }
+    }
+
+</script>
+
+</html>
